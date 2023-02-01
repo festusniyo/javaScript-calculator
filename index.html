@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JavaScript calculator by festus</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha3124-GLhlTQ12iRABdZLl12O3oVMWSktQOp12b7In1Zl3/Jr59b12EGGoI1aFkw7cmDA12j12gD" crossorigin="anonymous">
+    <script>
+        let trailingResult = 0;
+        let operationOptions = ['divide','multiply','subtract','add']; 
+        let workingOperation = "";
+        function updateDisplay(input){
+            let display = document.getElementById("display");
+            let secondDisplay = document.getElementById("secondDisplay");
+            if(display.innerHTML === "0" && operationOptions.indexOf(input) === -1){
+                if(input === "decimal"){
+                    display.innerHTML = "0.";
+                }
+                else if(input === "negative-value"){
+                    if(display.innerHTML.indexOf("-1") === -1){
+                        display.innerHTML = "-" + display.innerHTML;
+                    }
+                    else if(display.innerHTML.indexOf("-1" > -1)){
+                        display.innerHTML = display.innerHTML.slice(1, display.innerHTML.length);
+                    }   
+                }
+                else{
+                    display.innerHTML = input;
+                }
+            }else if(operationOptions.indexOf(input) >=0){
+                //console.log("dealing with operation")
+                if(trailingResult === display.innerHTML){
+                    workingOperation = input;
+                }
+
+                else if(workingOperation === ""){
+
+                    //without an operand
+                    workingOperation = input;
+                    trailingResult = display.innerHTML;
+                    display.innerHTML = 0;
+                }
+                else{
+                    //with an operand
+                    trailingResult = calculate(trailingResult, display.innerHTML, workingOperation);
+                    secondDisplay.innerHTML = trailingResult;
+                    display.innerHTML = 0;
+                    workingOperation = input;
+                }
+
+            }
+            else if(input === "equals"){
+                display.innerHTML = calculate(trailingResult, display.innerHTML, workingOperation);
+                trailingResult = 0;
+                workingOperation = "";
+            }
+            else if(input === "decimal"){
+                console.log("decimal clicked");
+                if(display.innerHTML.indexOf(".") === -1){
+                    display.innerHTML += ".";
+                }
+            }
+            else if(input === "negative-value"){
+                console.log("negative selected");
+                if(display.innerHTML.indexOf("-1") === -1){
+                    display.innerHTML = "-" + display.innerHTML;
+                }
+                else if(display.innerHTML.indexOf("-1" > -1)){
+                    display.innerHTML = display.innerHTML.slice(1, display.innerHTML.length);
+                }
+            }
+            else{
+                display.innerHTML +=input;
+            }
+            console.log(trailingResult, "<= trailingResult", display.innerHTML, "<= display.innerHTML", workingOperation, "<= workingOperation");
+            
+        }
+        function clearDisplay(){
+            let display = document.getElementById("display");
+            display.innerHTML = 0;
+        }
+        function calculate(firstNumber,secondNumber,operation){
+            let result;
+            firstNumber = parseFloat(firstNumber);
+            secondNumber = parseFloat(secondNumber);
+            switch(operation){
+                case "add":
+                  console.log("add calculated");
+                  result = firstNumber + secondNumber;
+                  break;
+
+                case "subtract":
+                  console.log("substract calculated");
+                  result = firstNumber - secondNumber;
+                  break;
+
+                case "divide":
+                  console.log("divide calculated");
+                  result = firstNumber / secondNumber;
+                  break;
+
+                case "multiply":
+                  console.log("multiply calculated");
+                  result = firstNumber * secondNumber;
+                  break;
+
+                default:
+                console.log("calculate missing something");
+            }
+            return result.toString();
+        }
+    </script>
+  </head>
+  <body>
+    <div class="container-fluid">
+        
+        <div class="row text-center">
+            <div class="col">
+                <div id="display" class="bg-dark  text-white py-4 my-2  fw-semibold fs-3">0</div>
+            </div>
+            <div class="col-2">
+                <div id="secondDisplay" class="bg-secondary  text-white py-4  my-2  fw-semibold fs-3">0</div>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col">
+                <a id="clear" class="btn btn-danger my-1 col-12 rounded-4 fw-semibold fs-4" onclick="clearDisplay()">Del</a>
+            </div>
+            <div class="col-3">
+                <a id="divide" class="btn btn-info my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay('divide')">:</a>
+            </div>
+        </div>
+        
+        <div class="row text-center">
+            <div class="col">
+                <a id="seven" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(7)">7</a>
+            </div>
+            <div class="col">
+                <a id="eight" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(8)">8</a>
+            </div>
+            <div class="col">
+                <a id="nine" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(9)">9</a>
+            </div>
+            <div class="col">
+                <a id="multiply" class="btn btn-info my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay('multiply')">x</a>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col">
+                <a id="four" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(4)">4</a>
+            </div>
+            <div class="col">
+                <a id="five" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(5)">5</a>
+            </div>
+            <div class="col">
+                <a id="six" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(6)">6</a>
+            </div>
+            <div class="col">
+                <a id="subtract" class="btn btn-info my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay('subtract')">-</a>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col">
+                <a id="one" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(1)">1</a>
+            </div>
+            <div class="col">
+                <a id="two" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(2)">2</a>
+            </div>
+            <div class="col">
+                <a id="three" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(3)">3</a>
+            </div>
+            <div class="col">
+                <a id="add" class="btn btn-info my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay('add')">+</a>
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <div class="col">
+                <a id="negative-value" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay('negative-value')">+/-</a>
+            </div>
+            <div class="col">
+                <a id="zero" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay(0)">0</a>
+            </div>
+            <div class="col">
+                <a id="decimal" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay('decimal')">.</a>
+            </div>
+            <div class="col-3">
+                <a id="equals" class="btn btn-secondary my-1 col-12 rounded-4 fw-semibold fs-5" onclick="updateDisplay('equals')">=</a>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col">
+                <h5 style="text-align: right;">
+                    <a href="#">
+                        JavaScript calculator by Festus
+                    </a>
+                </h5>
+            </div>
+        </div>   
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha3124-w712AqPfDkMBDXo30jS1Sgez12pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script>
+  </body>
+</html>
